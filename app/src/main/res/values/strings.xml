@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">海洋科普</string>
+
+    <string name="nav_courses">课程</string>
+    <string name="nav_recognition">识别</string>
+    <string name="nav_ai">AI模型</string>
+    <string name="nav_profile">我的</string>
+
+    <string name="course_list">课程列表</string>
+    <string name="course_detail">课程详情</string>
+    <string name="biology_list">海洋生物</string>
+    <string name="biology_detail">生物详情</string>
+    <string name="ai_info">AI模型信息</string>
+    <string name="login">登录</string>
+    <string name="logout">退出登录</string>
+    <string name="username_hint">请输入用户名</string>
+    <string name="role_hint">请选择身份</string>
+    <string name="role_student">学生</string>
+    <string name="role_teacher">教师</string>
+
+    <string name="btn_login">登录</string>
+    <string name="btn_upload">上传图片</string>
+    <string name="btn_recognize">开始识别</string>
+    <string name="btn_retry">重新上传</string>
+
+    <string name="loading">加载中...</string>
+    <string name="error_network">网络请求失败</string>
+    <string name="error_server">服务器异常</string>
+    <string name="error_empty">暂无数据</string>
+    <string name="success">操作成功</string>
+
+    <string name="model_name">模型名称</string>
+    <string name="model_version">版本</string>
+    <string name="model_classes">识别类别</string>
+    <string name="model_update">更新时间</string>
+
+    <string name="upload_success">上传成功</string>
+    <string name="upload_failed">上传失败</string>
+    <string name="select_image">请选择图片</string>
+</resources>
