@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>洋流模拟</title>
+  <link rel="stylesheet" href="sim.css" />
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>洋流探险家</h1>
+      <p>粒子驱动 · 操作-观察-探究</p>
+    </header>
+
+    <section class="missions">
+      <button type="button" class="mission" data-mission="warm">探究暖流与气候</button>
+      <button type="button" class="mission" data-mission="elnino">模拟厄尔尼诺</button>
+    </section>
+    <p id="missionHint" class="mission-hint hidden"></p>
+
+    <canvas id="sim"></canvas>
+
+    <section class="controls">
+      <label>风力 <span id="windVal">5</span>
+        <input type="range" id="wind" min="0" max="10" value="5" />
+      </label>
+      <label>风向 <span id="angleVal">90°</span>
+        <input type="range" id="windAngle" min="0" max="359" value="90" />
+      </label>
+      <label>温度差 <span id="tempVal">0℃</span>
+        <input type="range" id="temp" min="-5" max="5" step="0.5" value="0" />
+      </label>
+      <label>大陆布局
+        <select id="layout">
+          <option value="0">开阔大洋</option>
+          <option value="1" selected>赤道太平洋</option>
+          <option value="2">北大西洋</option>
+          <option value="3">多岛屿</option>
+        </select>
+      </label>
+      <label class="chk"><input type="checkbox" id="coriolis" checked /> 地转偏向力</label>
+      <div class="btn-row">
+        <button type="button" id="btnPredict" class="primary">AI 预测对比</button>
+        <button type="button" id="btnReset">重置粒子</button>
+      </div>
+    </section>
+
+    <section id="predictPanel" class="predict hidden">
+      <h3>人工推演 vs AI 预测</h3>
+      <p id="manualTrend"></p>
+      <p id="aiTrend"></p>
+      <p id="comparison" class="cmp"></p>
+    </section>
+  </div>
+  <script src="sim.js"></script>
+</body>
+</html>

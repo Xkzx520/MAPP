@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background">
+    android:background="@android:color/transparent"
+    android:paddingTop="56dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="serif"
+        android:gravity="center"
+        android:paddingHorizontal="24dp"
+        android:paddingBottom="12dp"
         android:text="@string/ai_info"
-        android:textSize="20sp"
-        android:textColor="@color/text_primary"
-        android:textStyle="bold"
-        android:padding="16dp"
-        android:background="@color/primary" />
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        android:textStyle="italic" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -21,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
+        android:indeterminateTint="@color/white"
         android:visibility="gone" />
 
     <LinearLayout
@@ -37,7 +42,9 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/card_background">
+                app:cardBackgroundColor="@android:color/transparent"
+                app:strokeColor="@color/glass_stroke"
+                app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,7 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="端侧AI模型"
+                    android:text="服务端 YOLOv8 模型"
                     android:textColor="@color/text_secondary"
                     android:textSize="14sp"
                     android:layout_gravity="center_horizontal" />

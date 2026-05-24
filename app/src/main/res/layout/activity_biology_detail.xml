@@ -110,6 +110,31 @@
                         android:textSize="15sp"
                         android:lineSpacingExtra="4dp" />
 
+                    <TextView
+                        android:id="@+id/text_habits"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="15sp"
+                        android:lineSpacingExtra="4dp" />
+
+                    <TextView
+                        android:id="@+id/text_distribution"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/text_protection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/accent"
+                        android:textSize="15sp" />
+
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>

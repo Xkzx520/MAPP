@@ -3,17 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background">
+    android:background="@android:color/transparent"
+    android:paddingTop="56dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="serif"
+        android:gravity="center"
+        android:paddingHorizontal="24dp"
+        android:paddingBottom="12dp"
         android:text="@string/nav_profile"
-        android:textSize="20sp"
-        android:textColor="@color/text_primary"
-        android:textStyle="bold"
-        android:padding="16dp"
-        android:background="@color/primary" />
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        android:textStyle="italic" />
 
     <LinearLayout
         android:id="@+id/logged_in_layout"

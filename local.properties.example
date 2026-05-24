@@ -1,0 +1,7 @@
+## 复制为 local.properties 后按需修改（不要提交含真实 IP 的 local.properties 到 Git）
+## Android SDK 路径由 Android Studio 自动生成，此处仅示例 API 配置
+#
+# sdk.dir=C\:\\Users\\YourName\\AppData\\Local\\Android\\Sdk
+#
+# 真机调试时填写电脑局域网 IP（ipconfig 查看 IPv4）
+# API_HOST=192.168.1.100

@@ -15,6 +15,7 @@ import com.example.mapp.api.ApiClient;
 import com.example.mapp.api.ApiService;
 import com.example.mapp.model.AIInfo;
 import com.example.mapp.model.ApiResponse;
+import com.example.mapp.util.NetworkUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,14 +64,14 @@ public class AIFragment extends Fragment {
                         contentLayout.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    Toast.makeText(getContext(), R.string.error_network, Toast.LENGTH_SHORT).show();
+                    NetworkUtil.showErrorResponseToast(getContext(), response);
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<AIInfo>> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(getContext(), R.string.error_network, Toast.LENGTH_SHORT).show();
+                NetworkUtil.showFailureToast(getContext(), t);
             }
         });
     }

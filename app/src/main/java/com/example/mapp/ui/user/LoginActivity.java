@@ -15,6 +15,7 @@ import com.example.mapp.api.ApiService;
 import com.example.mapp.model.ApiResponse;
 import com.example.mapp.model.LoginRequest;
 import com.example.mapp.model.User;
+import com.example.mapp.util.NetworkUtil;
 import com.example.mapp.util.PreferenceManager;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -82,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
                     }
                 } else {
-                    Toast.makeText(LoginActivity.this, R.string.error_network, Toast.LENGTH_SHORT).show();
+                    NetworkUtil.showErrorResponseToast(LoginActivity.this, response);
                 }
             }
 
@@ -90,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(Call<ApiResponse<User>> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
                 loginBtn.setEnabled(true);
-                Toast.makeText(LoginActivity.this, R.string.error_network, Toast.LENGTH_SHORT).show();
+                NetworkUtil.showFailureToast(LoginActivity.this, t);
             }
         });
     }

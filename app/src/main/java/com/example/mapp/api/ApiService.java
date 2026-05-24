@@ -3,6 +3,7 @@ package com.example.mapp.api;
 import com.example.mapp.model.AIInfo;
 import com.example.mapp.model.ApiResponse;
 import com.example.mapp.model.Biology;
+import com.example.mapp.model.BiologyDetection;
 import com.example.mapp.model.Course;
 import com.example.mapp.model.LoginRequest;
 import com.example.mapp.model.UploadResponse;
@@ -35,6 +36,13 @@ public interface ApiService {
 
     @GET("ai/info")
     Call<ApiResponse<AIInfo>> getAIInfo();
+
+    @GET("ai/health")
+    Call<ApiResponse<String>> healthCheck();
+
+    @Multipart
+    @POST("ai/detect")
+    Call<ApiResponse<BiologyDetection>> detectBiology(@Part MultipartBody.Part file);
 
     @POST("user/login")
     Call<ApiResponse<User>> login(@Body LoginRequest request);

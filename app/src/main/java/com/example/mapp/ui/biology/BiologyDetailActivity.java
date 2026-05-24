@@ -20,6 +20,9 @@ public class BiologyDetailActivity extends AppCompatActivity {
     private TextView nameText;
     private TextView enNameText;
     private TextView introText;
+    private TextView habitsText;
+    private TextView distributionText;
+    private TextView protectionText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,11 @@ public class BiologyDetailActivity extends AppCompatActivity {
         nameText = findViewById(R.id.text_name);
         enNameText = findViewById(R.id.text_en_name);
         introText = findViewById(R.id.text_intro);
+        habitsText = findViewById(R.id.text_habits);
+        distributionText = findViewById(R.id.text_distribution);
+        protectionText = findViewById(R.id.text_protection);
+
+        findViewById(R.id.btn_back).setOnClickListener(v -> finish());
 
         String biologyName = getIntent().getStringExtra("biology_name");
         if (biologyName != null && !biologyName.isEmpty()) {
@@ -70,5 +78,17 @@ public class BiologyDetailActivity extends AppCompatActivity {
         nameText.setText(biology.getBioName());
         enNameText.setText(biology.getEnName());
         introText.setText(biology.getIntro());
+        setOptionalLine(habitsText, getString(R.string.label_habits), biology.getHabits());
+        setOptionalLine(distributionText, getString(R.string.label_distribution), biology.getDistribution());
+        setOptionalLine(protectionText, getString(R.string.label_protection), biology.getProtectionLevel());
+    }
+
+    private void setOptionalLine(TextView view, String label, String value) {
+        if (value != null && !value.isEmpty()) {
+            view.setVisibility(View.VISIBLE);
+            view.setText(label + "：" + value);
+        } else {
+            view.setVisibility(View.GONE);
+        }
     }
 }
