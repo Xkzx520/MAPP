@@ -2,114 +2,255 @@ package com.example.mapp.ui;
 
 import android.animation.ValueAnimator;
 import android.net.Uri;
-import android.view.Choreographer;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.animation.LinearInterpolator;
 import android.widget.VideoView;
 
 /**
- * 全屏背景视频循环 + requestAnimationFrame 风格淡入淡出（无 CSS transition）。
+ * 全屏背景视频：17% 下移裁剪 + 500ms 淡入淡出无缝循环。
  */
 public class VideoBackgroundController {
 
     private static final String VIDEO_URL =
             "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_115001_bcdaa3b4-03de-47e7-ad63-ae3e392c32d4.mp4";
+    private static final float VIDEO_SHIFT_RATIO = 0.17f;
+    private static final float VIDEO_SCALE = 1.22f;
     private static final long FADE_MS = 500L;
-    private static final long FADE_OUT_BEFORE_END_MS = 550L;
-    private static final long RESET_DELAY_MS = 100L;
-    /** 视频整体下移比例，顶部留黑给文字区域 */
-    private static final float VIDEO_SHIFT_RATIO = 0.34f;
-    private static final float VIDEO_SCALE = 1.18f;
+    private static final float FADE_OUT_BEFORE_END_SEC = 0.55f;
+    private static final long LOOP_RESET_DELAY_MS = 100L;
+    private static final long PROGRESS_TICK_MS = 80L;
 
     private final VideoView videoView;
-    private final Choreographer choreographer = Choreographer.getInstance();
-
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private boolean released;
+    private boolean prepared;
     private boolean fadingOut;
-    private ValueAnimator runningAnimator;
-    private long fadeStartTime;
-    private float fadeStartAlpha;
-    private float fadeTargetAlpha;
-    private boolean fadeRunning;
-
-    private final Choreographer.FrameCallback fadeFrameCallback = new Choreographer.FrameCallback() {
-        @Override
-        public void doFrame(long frameTimeNanos) {
-            if (!fadeRunning) {
-                return;
-            }
-            long elapsed = System.currentTimeMillis() - fadeStartTime;
-            float t = Math.min(1f, elapsed / (float) FADE_MS);
-            float alpha = fadeStartAlpha + (fadeTargetAlpha - fadeStartAlpha) * t;
-            videoView.setAlpha(alpha);
-            if (t < 1f) {
-                choreographer.postFrameCallback(this);
-            } else {
-                fadeRunning = false;
-                videoView.setAlpha(fadeTargetAlpha);
-            }
-        }
-    };
-
-    private final Runnable positionChecker = new Runnable() {
-        @Override
-        public void run() {
-            if (!videoView.isShown()) {
-                return;
-            }
-            try {
-                if (videoView.isPlaying() && !fadingOut) {
-                    int duration = videoView.getDuration();
-                    int position = videoView.getCurrentPosition();
-                    if (duration > 0 && duration - position <= FADE_OUT_BEFORE_END_MS) {
-                        fadingOut = true;
-                        fadeTo(0f);
-                    }
-                }
-            } catch (Exception ignored) {
-            }
-            videoView.postDelayed(this, 80);
-        }
-    };
+    private float currentAlpha;
+    private ValueAnimator fadeAnimator;
+    private Runnable progressRunnable;
+    private Runnable loopResetRunnable;
+    private Runnable onErrorFallback;
 
     public VideoBackgroundController(VideoView videoView) {
         this.videoView = videoView;
+        currentAlpha = 0f;
+        videoView.setAlpha(0f);
+    }
+
+    public void setOnErrorFallback(Runnable onErrorFallback) {
+        this.onErrorFallback = onErrorFallback;
     }
 
     public void start() {
-        // 先保持可见，避免网络视频加载失败时整屏黑屏
-        videoView.setAlpha(1f);
+        if (released) {
+            return;
+        }
         videoView.setVideoURI(Uri.parse(VIDEO_URL));
         videoView.setOnPreparedListener(mp -> {
+            if (released) {
+                return;
+            }
+            prepared = true;
             mp.setLooping(false);
-            videoView.start();
+            mp.setVolume(0f, 0f);
             applyVerticalOffset();
-            videoView.setAlpha(1f);
-            videoView.removeCallbacks(positionChecker);
-            videoView.post(positionChecker);
+            fadingOut = false;
+            fadeTo(1f, () -> {
+                if (released) {
+                    return;
+                }
+                safeStart();
+                startProgressWatch();
+            });
         });
+        videoView.setOnCompletionListener(mp -> onVideoEnded());
         videoView.setOnErrorListener((mp, what, extra) -> {
-            // 隐藏视频层，露出底层渐变兜底
-            videoView.setVisibility(android.view.View.INVISIBLE);
+            if (!released) {
+                cancelPendingWork();
+                try {
+                    videoView.setVisibility(android.view.View.INVISIBLE);
+                } catch (Exception ignored) {
+                }
+                if (onErrorFallback != null) {
+                    onErrorFallback.run();
+                }
+            }
             return true;
         });
-        videoView.setOnCompletionListener(mp -> {
-            fadingOut = false;
-            cancelFade();
-            videoView.setAlpha(0f);
-            videoView.postDelayed(() -> {
+    }
+
+    private void onVideoEnded() {
+        if (released) {
+            return;
+        }
+        cancelFade();
+        currentAlpha = 0f;
+        safeSetAlpha(0f);
+        fadingOut = false;
+        cancelLoopReset();
+        loopResetRunnable = () -> {
+            loopResetRunnable = null;
+            if (released || !prepared) {
+                return;
+            }
+            try {
                 videoView.seekTo(0);
-                videoView.start();
-                fadeTo(1f);
-            }, RESET_DELAY_MS);
+                safeStart();
+                fadeTo(1f, null);
+            } catch (Exception ignored) {
+            }
+        };
+        handler.postDelayed(loopResetRunnable, LOOP_RESET_DELAY_MS);
+    }
+
+    private void startProgressWatch() {
+        stopProgressWatch();
+        progressRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (released || !prepared) {
+                    return;
+                }
+                try {
+                    int duration = videoView.getDuration();
+                    int position = videoView.getCurrentPosition();
+                    if (duration > 0) {
+                        float remainingSec = (duration - position) / 1000f;
+                        if (remainingSec <= FADE_OUT_BEFORE_END_SEC && remainingSec > 0 && !fadingOut) {
+                            fadingOut = true;
+                            fadeTo(0f, null);
+                        }
+                    }
+                } catch (Exception ignored) {
+                }
+                if (!released) {
+                    handler.postDelayed(this, PROGRESS_TICK_MS);
+                }
+            }
+        };
+        handler.post(progressRunnable);
+    }
+
+    private void stopProgressWatch() {
+        if (progressRunnable != null) {
+            handler.removeCallbacks(progressRunnable);
+            progressRunnable = null;
+        }
+    }
+
+    private void cancelLoopReset() {
+        if (loopResetRunnable != null) {
+            handler.removeCallbacks(loopResetRunnable);
+            loopResetRunnable = null;
+        }
+    }
+
+    private void cancelPendingWork() {
+        stopProgressWatch();
+        cancelLoopReset();
+        handler.removeCallbacksAndMessages(null);
+    }
+
+    private void cancelFade() {
+        if (fadeAnimator != null) {
+            fadeAnimator.cancel();
+            fadeAnimator.removeAllUpdateListeners();
+            fadeAnimator.removeAllListeners();
+            fadeAnimator = null;
+        }
+    }
+
+    private void fadeTo(float target, Runnable onEnd) {
+        if (released) {
+            return;
+        }
+        cancelFade();
+        float from = currentAlpha;
+        fadeAnimator = ValueAnimator.ofFloat(from, target);
+        fadeAnimator.setDuration(FADE_MS);
+        fadeAnimator.setInterpolator(new LinearInterpolator());
+        fadeAnimator.addUpdateListener(animation -> {
+            if (released) {
+                return;
+            }
+            currentAlpha = (float) animation.getAnimatedValue();
+            safeSetAlpha(currentAlpha);
         });
+        fadeAnimator.addListener(new android.animation.AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(android.animation.Animator animation) {
+                if (!released && onEnd != null) {
+                    onEnd.run();
+                }
+            }
+        });
+        fadeAnimator.start();
+    }
+
+    private void safeSetAlpha(float alpha) {
+        try {
+            videoView.setAlpha(alpha);
+        } catch (Exception ignored) {
+        }
+    }
+
+    private void safeStart() {
+        try {
+            if (!videoView.isPlaying()) {
+                videoView.start();
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    public void pause() {
+        cancelPendingWork();
+        cancelFade();
+        if (released || !prepared) {
+            return;
+        }
+        try {
+            if (videoView.isPlaying()) {
+                videoView.pause();
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    public void resume() {
+        if (released || !prepared) {
+            return;
+        }
+        safeStart();
+        startProgressWatch();
     }
 
     public void release() {
+        if (released) {
+            return;
+        }
+        released = true;
+        prepared = false;
+        cancelPendingWork();
         cancelFade();
-        videoView.removeCallbacks(positionChecker);
-        videoView.stopPlayback();
+        videoView.setOnPreparedListener(null);
+        videoView.setOnCompletionListener(null);
+        videoView.setOnErrorListener(null);
+        try {
+            videoView.stopPlayback();
+        } catch (Exception ignored) {
+        }
     }
 
     private void applyVerticalOffset() {
+        if (released) {
+            return;
+        }
         videoView.post(() -> {
+            if (released) {
+                return;
+            }
             int height = videoView.getHeight();
             if (height <= 0) {
                 return;
@@ -121,23 +262,5 @@ public class VideoBackgroundController {
             videoView.setScaleY(VIDEO_SCALE);
             videoView.setTranslationY(offset);
         });
-    }
-
-    private void fadeTo(float targetAlpha) {
-        cancelFade();
-        fadeStartAlpha = videoView.getAlpha();
-        fadeTargetAlpha = targetAlpha;
-        fadeStartTime = System.currentTimeMillis();
-        fadeRunning = true;
-        choreographer.postFrameCallback(fadeFrameCallback);
-    }
-
-    private void cancelFade() {
-        fadeRunning = false;
-        choreographer.removeFrameCallback(fadeFrameCallback);
-        if (runningAnimator != null) {
-            runningAnimator.cancel();
-            runningAnimator = null;
-        }
     }
 }

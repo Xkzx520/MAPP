@@ -1,5 +1,9 @@
 package com.example.mapp.api;
 
+import android.util.Log;
+import com.example.mapp.BuildConfig;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -13,20 +17,27 @@ public class ApiClient {
 
     public static Retrofit getClient() {
         if (retrofit == null) {
-            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
+                    .connectTimeout(12, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .writeTimeout(30, TimeUnit.SECONDS);
 
-            OkHttpClient client = new OkHttpClient.Builder()
-                    .addInterceptor(loggingInterceptor)
-                    .connectTimeout(30, TimeUnit.SECONDS)
-                    .readTimeout(90, TimeUnit.SECONDS)
-                    .writeTimeout(90, TimeUnit.SECONDS)
-                    .build();
+            if (BuildConfig.DEBUG) {
+                Log.i(NetworkLogInterceptor.TAG, "API baseUrl=" + ApiConfig.getBaseUrl());
+                clientBuilder.addInterceptor(new NetworkLogInterceptor());
+                HttpLoggingInterceptor logging = new HttpLoggingInterceptor(
+                        message -> Log.d(NetworkLogInterceptor.TAG, message));
+                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+                clientBuilder.addInterceptor(logging);
+            }
 
+            Gson gson = new GsonBuilder()
+                    .serializeNulls()
+                    .create();
             retrofit = new Retrofit.Builder()
                     .baseUrl(ApiConfig.getBaseUrl())
-                    .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(clientBuilder.build())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }
         return retrofit;

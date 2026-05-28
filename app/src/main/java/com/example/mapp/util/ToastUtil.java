@@ -1,24 +1,17 @@
 package com.example.mapp.util;
 
-import android.widget.Toast;
 import android.content.Context;
+import android.widget.Toast;
 
-public class ToastUtil {
-    private static Toast toast;
+public final class ToastUtil {
 
-    public static void show(Context context, String message) {
-        if (toast != null) {
-            toast.cancel();
-        }
-        toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
-        toast.show();
+    private ToastUtil() {
     }
 
-    public static void showLong(Context context, String message) {
-        if (toast != null) {
-            toast.cancel();
+    public static void showShort(Context context, String message) {
+        if (context == null || message == null) {
+            return;
         }
-        toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
-        toast.show();
+        Toast.makeText(context.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/background">
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_ocean_main" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_cinematic_overlay" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -54,7 +69,9 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp"
-                app:cardBackgroundColor="@color/card_background">
+                app:cardBackgroundColor="@color/card_background"
+                app:strokeColor="@color/glass_stroke"
+                app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -66,7 +83,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="欢迎登录"
-                        android:textColor="@color/primary"
+                        android:textColor="@color/white"
                         android:textSize="24sp"
                         android:textStyle="bold" />
 
@@ -74,7 +91,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="科教灯塔 - 海洋科普教育平台"
+                        android:text="知海逐浪 - 海洋科普教育平台"
                         android:textColor="@color/text_secondary"
                         android:textSize="14sp" />
 
@@ -97,6 +114,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:hint="请输入用户名"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
                         android:inputType="text"
                         android:maxLines="1"
                         android:padding="12dp"
@@ -109,6 +128,27 @@
                         android:text="@string/role_hint"
                         android:textColor="@color/text_secondary"
                         android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/password_hint"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/input_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:hint="@string/password_hint"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:padding="12dp"
+                        android:background="@drawable/bg_input" />
 
                     <Spinner
                         android:id="@+id/spinner_role"
@@ -124,7 +164,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="32dp"
                         android:text="@string/btn_login"
-                        android:backgroundTint="@color/primary" />
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/black" />
+
+                    <TextView
+                        android:id="@+id/link_register"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="16dp"
+                        android:text="@string.go_register"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -134,4 +185,5 @@
 
     </ScrollView>
 
-</LinearLayout>
+    </LinearLayout>
+</FrameLayout>

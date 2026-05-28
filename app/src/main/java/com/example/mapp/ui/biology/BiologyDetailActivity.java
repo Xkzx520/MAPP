@@ -2,21 +2,25 @@ package com.example.mapp.ui.biology;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.bumptech.glide.Glide;
 import com.example.mapp.R;
 import com.example.mapp.api.ApiClient;
 import com.example.mapp.api.ApiService;
 import com.example.mapp.model.ApiResponse;
 import com.example.mapp.model.Biology;
+import com.example.mapp.util.BiologyImageLoader;
+import com.example.mapp.util.NetworkUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class BiologyDetailActivity extends AppCompatActivity {
     private ProgressBar progressBar;
+    private ImageView imageView;
     private TextView nameText;
     private TextView enNameText;
     private TextView introText;
@@ -30,6 +34,7 @@ public class BiologyDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_biology_detail);
 
         progressBar = findViewById(R.id.progress_bar);
+        imageView = findViewById(R.id.image_biology);
         nameText = findViewById(R.id.text_name);
         enNameText = findViewById(R.id.text_en_name);
         introText = findViewById(R.id.text_intro);
@@ -43,7 +48,7 @@ public class BiologyDetailActivity extends AppCompatActivity {
         if (biologyName != null && !biologyName.isEmpty()) {
             loadBiologyDetail(biologyName);
         } else {
-            Toast.makeText(this, R.string.error_network, Toast.LENGTH_SHORT).show();
+            NetworkUtil.showFailureToast(this, new IllegalArgumentException(getString(R.string.error_recognize_param)));
             finish();
         }
     }
@@ -56,20 +61,20 @@ public class BiologyDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ApiResponse<Biology>> call, Response<ApiResponse<Biology>> response) {
                 progressBar.setVisibility(View.GONE);
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                if (!isFinishing() && response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     Biology biology = response.body().getData();
                     if (biology != null) {
                         displayBiology(biology);
+                        return;
                     }
-                } else {
-                    Toast.makeText(BiologyDetailActivity.this, R.string.error_network, Toast.LENGTH_SHORT).show();
                 }
+                NetworkUtil.showErrorResponseToast(BiologyDetailActivity.this, response);
             }
 
             @Override
             public void onFailure(Call<ApiResponse<Biology>> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(BiologyDetailActivity.this, R.string.error_network, Toast.LENGTH_SHORT).show();
+                NetworkUtil.showFailureToast(BiologyDetailActivity.this, t);
             }
         });
     }
@@ -81,6 +86,8 @@ public class BiologyDetailActivity extends AppCompatActivity {
         setOptionalLine(habitsText, getString(R.string.label_habits), biology.getHabits());
         setOptionalLine(distributionText, getString(R.string.label_distribution), biology.getDistribution());
         setOptionalLine(protectionText, getString(R.string.label_protection), biology.getProtectionLevel());
+
+        BiologyImageLoader.load(imageView, biology);
     }
 
     private void setOptionalLine(TextView view, String label, String value) {

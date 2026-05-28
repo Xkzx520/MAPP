@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#0A1628</color>
+    <color name="primary">#000000</color>
     <color name="primary_dark">#000000</color>
-    <color name="primary_light">#4FC3F7</color>
-    <color name="accent">#26C6DA</color>
-    <color name="ocean_blue">#00BCD4</color>
-    <color name="sea_blue">#4DD0E1</color>
-    <color name="light_blue">#80DEEA</color>
-    <color name="deep_sea">#020810</color>
+    <color name="primary_light">#FFFFFF</color>
+    <color name="accent">#FFFFFF</color>
+    <color name="accent_cyan">#5CE1E6</color>
+    <color name="ocean_blue">#000000</color>
+    <color name="sea_blue">#FFFFFF</color>
+    <color name="light_blue">#FFFFFF</color>
+    <color name="deep_sea">#000000</color>
 
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <color name="purple_200">#FFFFFFFF</color>
+    <color name="purple_500">#FFFFFFFF</color>
+    <color name="purple_700">#FFFFFFFF</color>
+    <color name="teal_200">#FFFFFFFF</color>
+    <color name="teal_700">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
     <color name="text_primary">#FFFFFFFF</color>
-    <color name="text_secondary">#B3FFFFFF</color>
-    <color name="text_muted">#66FFFFFF</color>
+    <color name="text_secondary">#FFFFFFFF</color>
+    <color name="text_muted">#CCFFFFFF</color>
     <color name="divider">#33FFFFFF</color>
+    <color name="border_black">#FF000000</color>
+    <color name="glass_stroke">#66FFFFFF</color>
+    <color name="glass_fill">#03FFFFFF</color>
+    <color name="white_40">#66FFFFFF</color>
+    <color name="white_80">#CCFFFFFF</color>
     <color name="background">#00000000</color>
-    <color name="card_background">#14FFFFFF</color>
-    <color name="glass_stroke">#40FFFFFF</color>
+    <color name="card_background">#99000000</color>
 </resources>

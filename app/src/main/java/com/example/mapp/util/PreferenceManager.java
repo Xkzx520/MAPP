@@ -9,6 +9,7 @@ public class PreferenceManager {
     private static final String KEY_USERNAME = "username";
     private static final String KEY_NICKNAME = "nickname";
     private static final String KEY_ROLE = "role";
+    private static final String KEY_GUEST_MODE = "guest_mode";
 
     private final SharedPreferences preferences;
     private static PreferenceManager instance;
@@ -30,6 +31,7 @@ public class PreferenceManager {
                 .putString(KEY_USERNAME, username)
                 .putString(KEY_NICKNAME, nickname)
                 .putString(KEY_ROLE, role)
+                .putBoolean(KEY_GUEST_MODE, false)
                 .apply();
     }
 
@@ -53,7 +55,31 @@ public class PreferenceManager {
         return getUserId() != -1;
     }
 
+    public boolean isGuestMode() {
+        return preferences.getBoolean(KEY_GUEST_MODE, false);
+    }
+
+    public void setGuestMode(boolean guest) {
+        if (guest) {
+            preferences.edit()
+                    .putBoolean(KEY_GUEST_MODE, true)
+                    .remove(KEY_USER_ID)
+                    .remove(KEY_USERNAME)
+                    .remove(KEY_NICKNAME)
+                    .remove(KEY_ROLE)
+                    .apply();
+        } else {
+            preferences.edit().putBoolean(KEY_GUEST_MODE, false).apply();
+        }
+    }
+
     public void clearUser() {
-        preferences.edit().clear().apply();
+        preferences.edit()
+                .remove(KEY_USER_ID)
+                .remove(KEY_USERNAME)
+                .remove(KEY_NICKNAME)
+                .remove(KEY_ROLE)
+                .putBoolean(KEY_GUEST_MODE, false)
+                .apply();
     }
 }

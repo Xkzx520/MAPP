@@ -1,6 +1,7 @@
 package com.example.mapp.ui.course;
 
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.example.mapp.model.ApiResponse;
 import com.example.mapp.model.Course;
 import com.example.mapp.ui.MainActivity;
 import com.example.mapp.util.NetworkUtil;
+import androidx.core.content.res.ResourcesCompat;
 import com.google.android.material.card.MaterialCardView;
 import java.util.List;
 import retrofit2.Call;
@@ -43,6 +45,8 @@ public class CourseFragment extends Fragment {
 
     private Course recognitionCourse;
     private Course currentCourse;
+    private Call<ApiResponse<List<Course>>> coursesCall;
+    private boolean coursesLoaded;
 
     @Nullable
     @Override
@@ -74,10 +78,26 @@ public class CourseFragment extends Fragment {
         btnGoCurrent.setOnClickListener(v -> openCurrentCourseDetail());
         sectionCurrent.setOnClickListener(v -> openCurrentCourseDetail());
 
-        loadCourses();
+        setupHeroSection(view);
+
+        if (!coursesLoaded) {
+            loadCourses();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (coursesCall != null) {
+            coursesCall.cancel();
+            coursesCall = null;
+        }
+        super.onDestroyView();
     }
 
     private void loadCourses() {
+        if (coursesCall != null) {
+            return;
+        }
         progressBar.setVisibility(View.VISIBLE);
         emptyView.setVisibility(View.GONE);
         // 先展示默认文案，避免等待接口时整屏空白
@@ -85,11 +105,17 @@ public class CourseFragment extends Fragment {
         bindCourses(java.util.Collections.emptyList());
 
         ApiService apiService = ApiClient.getApiService();
-        apiService.getCourseList().enqueue(new Callback<ApiResponse<List<Course>>>() {
+        coursesCall = apiService.getCourseList();
+        coursesCall.enqueue(new Callback<ApiResponse<List<Course>>>() {
             @Override
             public void onResponse(Call<ApiResponse<List<Course>>> call,
                                    Response<ApiResponse<List<Course>>> response) {
+                coursesCall = null;
+                if (!isAdded()) {
+                    return;
+                }
                 progressBar.setVisibility(View.GONE);
+                coursesLoaded = true;
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     List<Course> courses = response.body().getData();
                     if (courses != null && !courses.isEmpty()) {
@@ -107,6 +133,10 @@ public class CourseFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ApiResponse<List<Course>>> call, Throwable t) {
+                coursesCall = null;
+                if (!isAdded()) {
+                    return;
+                }
                 progressBar.setVisibility(View.GONE);
                 NetworkUtil.showFailureToast(requireContext(), t);
                 emptyView.setVisibility(View.VISIBLE);
@@ -151,6 +181,26 @@ public class CourseFragment extends Fragment {
             }
         }
         return null;
+    }
+
+    private void setupHeroSection(View root) {
+        TextView title = root.findViewById(R.id.hero_title);
+        if (title == null || !isAdded()) {
+            return;
+        }
+        try {
+            android.graphics.Typeface tf = ResourcesCompat.getFont(requireContext(), R.font.instrument_serif);
+            if (tf != null) {
+                title.setTypeface(tf);
+            }
+        } catch (Exception ignored) {
+            title.setTypeface(android.graphics.Typeface.SERIF);
+        }
+        int width = getResources().getDisplayMetrics().widthPixels;
+        if (width >= getResources().getDimensionPixelSize(R.dimen.hero_nav_max_width) / 2) {
+            title.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                    getResources().getDimension(R.dimen.hero_title_size_large));
+        }
     }
 
     private void openRecognition() {

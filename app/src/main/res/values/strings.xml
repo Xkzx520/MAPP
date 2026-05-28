@@ -9,6 +9,19 @@
 
     <string name="course_list">课程列表</string>
     <string name="hero_subtitle">探索珊瑚礁与热带鱼的世界，开启你的海洋科普之旅。</string>
+    <string name="hero_brand">Asme</string>
+    <string name="hero_heading">Built for the curious</string>
+    <string name="hero_nav_features">Features</string>
+    <string name="hero_nav_pricing">Pricing</string>
+    <string name="hero_nav_about">About</string>
+    <string name="hero_sign_up">Sign Up</string>
+    <string name="hero_email_hint">Enter your email</string>
+    <string name="hero_email_submit">Subscribe</string>
+    <string name="hero_newsletter_subtitle">Stay updated with the latest news and insights. Subscribe to our newsletter today and never miss out on exciting updates.</string>
+    <string name="hero_manifesto">Manifesto</string>
+    <string name="hero_social_instagram">Instagram</string>
+    <string name="hero_social_twitter">Twitter</string>
+    <string name="hero_social_globe">Website</string>
     <string name="section_label_01">第一模块</string>
     <string name="section_label_02">第二模块</string>
     <string name="section_recognition_title">海洋识别</string>
@@ -23,6 +36,7 @@
     <string name="section_current_fallback_intro">通过粒子系统模拟洋流运动，理解风场、大陆与地转偏向力的影响。</string>
     <string name="course_detail">课程详情</string>
     <string name="biology_list">海洋生物</string>
+    <string name="biology_gallery_title">海洋生物科普图鉴（16+）</string>
     <string name="biology_detail">生物详情</string>
     <string name="ai_info">AI模型信息</string>
     <string name="login">登录</string>
@@ -43,6 +57,8 @@
     <string name="label_distribution">分布</string>
     <string name="label_protection">保护等级</string>
     <string name="label_ai_tip">AI 怎么看</string>
+    <string name="label_detect_category">识别类别</string>
+    <string name="label_model_class">模型标签</string>
     <string name="btn_retry">重新上传</string>
 
     <string name="loading">加载中...</string>
@@ -67,4 +83,37 @@
     <string name="select_image_cancelled">未选择图片</string>
     <string name="select_image_hint">点击选择图片</string>
     <string name="permission_image_denied">需要存储权限才能选择图片</string>
+    <string name="permission_granted">已授权相册/存储权限</string>
+    <string name="password_hint">密码（至少6位）</string>
+    <string name="password_too_short">密码至少 6 位</string>
+    <string name="old_password_hint">原密码</string>
+    <string name="new_password_hint">新密码</string>
+    <string name="nickname_hint">昵称（可选）</string>
+    <string name="register">注册</string>
+    <string name="register_success">注册成功</string>
+    <string name="go_register">没有账号？去注册</string>
+    <string name="change_password">修改密码</string>
+    <string name="password_changed">密码已修改</string>
+    <string name="need_login">请先登录</string>
+    <string name="settings">系统设置</string>
+    <string name="settings_api_title">服务器地址</string>
+    <string name="settings_api_format">http://%1$s:%2$d/</string>
+    <string name="settings_permission_title">权限管理</string>
+    <string name="request_permissions">申请相册/存储权限</string>
+    <string name="guest_mode">游客模式（免登录体验）</string>
+    <string name="guest_mode_on">已进入游客模式</string>
+    <string name="guest_mode_off">已关闭游客模式</string>
+    <string name="guest_enter">游客模式进入</string>
+    <string name="error_app_crash">应用出现异常，即将退出</string>
+    <string name="error_camera">相机不可用，请从相册选择图片</string>
+    <string name="error_recognize_param">识别参数错误，请重新选择图片</string>
+    <string name="error_biology_list">百科列表加载失败</string>
+
+    <string name="teacher_portal_title">教师工作台</string>
+    <string name="teacher_portal_subtitle">查看学生学习记录，发送评价与指导</string>
+    <string name="teacher_records_title">学习浏览记录</string>
+    <string name="teacher_chat_title">指导对话</string>
+    <string name="teacher_message_hint">输入评价或指导内容</string>
+    <string name="teacher_send">发送</string>
+    <string name="teacher_open_portal">进入教师工作台</string>
 </resources>

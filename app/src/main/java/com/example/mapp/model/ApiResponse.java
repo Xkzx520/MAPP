@@ -1,8 +1,13 @@
 package com.example.mapp.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ApiResponse<T> {
+    @SerializedName("code")
     private int code;
+    @SerializedName(value = "msg", alternate = {"message"})
     private String msg;
+    @SerializedName("data")
     private T data;
 
     public int getCode() {

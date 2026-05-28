@@ -1,11 +1,19 @@
 package com.example.mapp.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class BiologyDetection {
+    @SerializedName(value = "bioName", alternate = {"bio_name"})
     private String bioName;
+    @SerializedName("enName")
     private String enName;
+    @SerializedName("intro")
     private String intro;
+    @SerializedName(value = "className", alternate = {"class_name"})
     private String className;
+    @SerializedName("confidence")
     private Float confidence;
+    @SerializedName("imageUrl")
     private String imageUrl;
 
     public String getBioName() {

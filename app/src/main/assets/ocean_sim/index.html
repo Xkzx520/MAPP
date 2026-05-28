@@ -19,27 +19,35 @@
     </section>
     <p id="missionHint" class="mission-hint hidden"></p>
 
-    <canvas id="sim"></canvas>
+    <div class="sim-stage">
+      <canvas id="mapLayer"></canvas>
+      <canvas id="particleLayer"></canvas>
+      <div id="mapTitle" class="map-title"></div>
+    </div>
 
     <section class="controls">
       <label>风力 <span id="windVal">5</span>
         <input type="range" id="wind" min="0" max="10" value="5" />
       </label>
-      <label>风向 <span id="angleVal">90°</span>
-        <input type="range" id="windAngle" min="0" max="359" value="90" />
+      <label>风向 <span id="angleVal">180°</span>
+        <input type="range" id="windAngle" min="0" max="359" value="180" />
       </label>
       <label>温度差 <span id="tempVal">0℃</span>
         <input type="range" id="temp" min="-5" max="5" step="0.5" value="0" />
       </label>
-      <label>大陆布局
+      <label>盐度 <span id="salinityVal">35‰</span>
+        <input type="range" id="salinity" min="30" max="38" step="0.5" value="35" />
+      </label>
+      <label>视野区域
         <select id="layout">
-          <option value="0">开阔大洋</option>
+          <option value="0">全球大洋</option>
           <option value="1" selected>赤道太平洋</option>
           <option value="2">北大西洋</option>
-          <option value="3">多岛屿</option>
+          <option value="3">西太平洋</option>
         </select>
       </label>
       <label class="chk"><input type="checkbox" id="coriolis" checked /> 地转偏向力</label>
+      <p class="ai-tip">底层为世界地图，上层为洋流粒子（独立图层）。调节参数观察物理漂移。</p>
       <div class="btn-row">
         <button type="button" id="btnPredict" class="primary">AI 预测对比</button>
         <button type="button" id="btnReset">重置粒子</button>

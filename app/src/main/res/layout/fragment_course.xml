@@ -28,7 +28,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:fillViewport="true"
-        android:paddingTop="56dp"
+        android:paddingTop="8dp"
         android:paddingBottom="16dp"
         android:scrollbars="none">
 
@@ -38,37 +38,7 @@
             android:orientation="vertical"
             android:paddingHorizontal="16dp">
 
-            <!-- 第一块：品牌 / Hero -->
-            <LinearLayout
-                android:id="@+id/section_hero"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:minHeight="200dp"
-                android:orientation="vertical"
-                android:paddingHorizontal="8dp"
-                android:paddingTop="24dp"
-                android:paddingBottom="28dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="serif"
-                    android:text="Built for the curious"
-                    android:textColor="@color/white"
-                    android:textSize="34sp"
-                    android:textStyle="italic" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:gravity="center"
-                    android:lineSpacingExtra="5dp"
-                    android:text="@string/hero_subtitle"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
-            </LinearLayout>
+            <include layout="@layout/include_hero_asme" />
 
             <View
                 android:layout_width="match_parent"
@@ -120,7 +90,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:textColor="@color/accent"
+                        android:textColor="@color/accent_cyan"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -149,7 +119,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
-                        android:backgroundTint="@color/white"
+                        android:background="@drawable/bg_btn_primary_white"
                         android:text="@string/btn_enter_recognition"
                         android:textColor="@color/black" />
                 </LinearLayout>
@@ -205,7 +175,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:textColor="@color/sea_blue"
+                        android:textColor="@color/accent_cyan"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -234,9 +204,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
-                        android:background="@drawable/bg_liquid_glass"
+                        android:background="@drawable/bg_btn_primary_white"
                         android:text="@string/btn_view_course_detail"
-                        android:textColor="@color/white" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
